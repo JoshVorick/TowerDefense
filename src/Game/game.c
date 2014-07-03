@@ -55,19 +55,28 @@ void initGame(Game *game){
   game->sprites[PENTAGON].image = loadImage("img/PentagonTower.png");
   game->sprites[HEXAGON].image = loadImage("img/HexagonTower.png");  
 
-  game->font = TTF_OpenFont("fonts/blackWolf.ttf", 16);
-  game->fontColor.r = 200;
-  game->fontColor.g = 200;
-  game->fontColor.b = 200;
-  game->fontBGColor.r = 30;
-  game->fontBGColor.g = 30;
-  game->fontBGColor.b = 30;
+  game->font = TTF_OpenFont("fonts/blackWolf.ttf", 14);
+  game->white.r = 200;
+  game->white.g = 200;
+  game->white.b = 200;
+  game->red.r = 230;
+  game->red.g = 0;
+  game->red.b = 0;
+  game->green.r = 0;
+  game->green.g = 230;
+  game->green.b = 0;
+  game->blue.r = 50;
+  game->blue.g = 50;
+  game->blue.b = 255;
+  game->gray.r = 10;
+  game->gray.g = 10;
+  game->gray.b = 10;
 
   game->grid = malloc(sizeof(Grid));
   game->grid->dimensionX = 7;
   game->grid->dimensionY = 12;
   game->grid->tiles = (Grid_Tile**)malloc(game->grid->dimensionX*sizeof(Grid_Tile));
-  initGrid(game->grid, 75, 50);
+  initGrid(game->grid, 100, 60);
 };
 
 void updateGame(Game *game){
@@ -92,7 +101,7 @@ void drawGame(Game *game){
       drawImage(game->sprites[GRID_TILE].image, game->grid->tiles[i][j].x, game->grid->tiles[i][j].y);
       char str[1];
       sprintf(str, "%i", game->grid->tiles[i][j].distFromExit);
-      drawString(str, game->grid->tiles[i][j].x, game->grid->tiles[i][j].y, game->font, 0, 0, game->fontColor, game->fontBGColor);
+      drawString(str, game->grid->tiles[i][j].x, game->grid->tiles[i][j].y, game->font, 0, 0, game->white, game->gray);
   }
 
   drawTowers(game);
@@ -115,22 +124,23 @@ void drawGame(Game *game){
   SDL_FillRect(screen, &rect, SDL_MapRGB(screen->format, game->rRatio, game->gRatio, game->bRatio));
   
   char str[20];
-  sprintf(str, "Press M to go to menu. Score: %d", game->score);
-  drawString(str, 0, 650, game->font, 1, 0, game->fontColor, game->fontBGColor);
+  drawString("Press M to go to Menu", 0, 667, game->font, 1, 0, game->white, game->gray);
+  sprintf(str, "Score: %d", game->score);
+  drawString(str, 0, 650, game->font, 1, 0, game->white, game->gray);
   sprintf(str, "Red: %i", game->rStored);
-  drawString(str, 0, 20, game->font, 0, 0, game->fontColor, game->fontBGColor);
+  drawString(str, 0, 17, game->font, 0, 0, game->red, game->gray);
   sprintf(str, "Green: %i", game->gStored);
-  drawString(str, 0, 40, game->font, 0, 0, game->fontColor, game->fontBGColor);
+  drawString(str, 0, 34, game->font, 0, 0, game->green, game->gray);
   sprintf(str, "Blue: %i", game->bStored);
-  drawString(str, 0, 60, game->font, 0, 0, game->fontColor, game->fontBGColor);
+  drawString(str, 0, 51, game->font, 0, 0, game->blue, game->gray);
   sprintf(str, "R:G:B =  %i, %i, %i", game->rRatio, game->gRatio, game->bRatio);
-  drawString(str, 0, 0, game->font, 0, 0, game->fontColor, game->fontBGColor);
-  sprintf(str, "Lives left: %i", game->lives);
-  drawString(str, 0, 80, game->font, 0, 0, game->fontColor, game->fontBGColor);
+  drawString(str, 0, 0, game->font, 0, 0, game->white, game->gray);
+  sprintf(str, "Lives: %i", game->lives);
+  drawString(str, 0, 68, game->font, 0, 0, game->white, game->gray);
   
   double total = (game->rRatio + game->gRatio + game->bRatio) / (double)game->towerPrices[game->selectedTowerType];
   sprintf(str, "Cost for selected Tower: %d,%d,%d", (int)(game->rRatio/total), (int)(game->gRatio/total), (int)(game->bRatio/total));
-  drawString(str, 0, 0, game->font, 0, 0, game->fontColor, game->fontBGColor);
+  drawString(str, 0, 0, game->font, 0, 0, game->white, game->gray);
   
   SDL_Flip(screen);
 };

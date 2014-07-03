@@ -63,11 +63,11 @@ typedef struct Game{
   int towerPrices[NUM_TOWERS];
   int keys[NUM_GAME_KEYS];
   Sprite sprites[NUM_SPRITES_GAME];
-  SDL_Color fontColor, fontBGColor;
   Grid *grid; /*grid of the game*/
   Tower *towers; /*Linked list*/
   Bullet *bullets;
   Enemy *enemies;
   EnemyGenerator enemyGenerator;
   TTF_Font *font;
+  SDL_Color white, red, green, blue, gray;
 } Game;

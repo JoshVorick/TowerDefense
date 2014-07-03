@@ -6,8 +6,8 @@ CXX = gcc
 %.o: %.c %.h src/defs.h src/structs.h 
 	$(CXX) $(FLAGS) -c -s $< -o $@
 
-Tower_Defense: $(OBJS)
+TowerDefense: $(OBJS)
 	$(CXX) $(OBJS) -o $@ $(LFLAGS)
 
 clean:
-	rm Tower_Defense $(OBJS)
+	rm TowerDefense $(OBJS)
