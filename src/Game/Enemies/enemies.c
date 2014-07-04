@@ -104,8 +104,9 @@ Enemy* msortEnemies(Enemy *head){
   printf("sort enemy end\n");
 };
 
-void updateEnemies(SubGame *subGame, int *score, Sprite sprites[NUM_SPRITES_GAME]){
+int updateEnemies(SubGame *subGame, Sprite sprites[NUM_SPRITES_GAME]){
   printf("update enemy start\n");
+  int score = 0;
   Enemy *curEnemy = subGame->enemies;
   Enemy *prevEnemy = NULL;
   while(curEnemy != NULL){
@@ -174,5 +175,6 @@ void updateEnemies(SubGame *subGame, int *score, Sprite sprites[NUM_SPRITES_GAME
   }
   subGame->enemies = msortEnemies(subGame->enemies);
   printf("update enemy end\n");
+  return score;
 };
 

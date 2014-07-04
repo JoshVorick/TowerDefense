@@ -16,7 +16,6 @@ void updateTowers(SubGame *subGame){
       Enemy *gonnaGetShot = findEnemyInRange(curTower->x, curTower->y, curTower->range, subGame->enemies);
       if(gonnaGetShot != NULL){
         towerShoot(gonnaGetShot, curTower);
-        printf("HA\n");
         addBullet(subGame, curTower, gonnaGetShot);
         curTower->ticksSinceFired = 0;
       }

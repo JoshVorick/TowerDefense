@@ -5,14 +5,14 @@ extern void initEnemyGenerator(SubGame *subGame);
 extern void generateEnemies(SubGame *subGame, int levelTime, Sprite sprites[NUM_SPRITES_GAME]);
 extern void updateTowers(SubGame *subGame);
 extern void updateBullets(SubGame *subGame);
-extern void updateEnemies(SubGame *subGame, int *score, Sprite sprites[NUM_SPRITES_GAME]);
+extern int updateEnemies(SubGame *subGame, Sprite sprites[NUM_SPRITES_GAME]);
 extern void findPath(SubGame *subGame);
 extern void drawImage(SDL_Surface *surface, int x, int y);
 extern void drawTowers(SubGame *subGame, Sprite sprites[NUM_SPRITES_GAME]);
 extern void drawBullets(SubGame *subGame, Sprite sprites[NUM_SPRITES_GAME]);
 extern void freeGrid(Grid *grid);
 
-void updateSubGames(SubGame *subGame, int levelTime, int *score, Sprite sprites[NUM_SPRITES_GAME]);
+int updateSubGames(SubGame *subGame, int levelTime, Sprite sprites[NUM_SPRITES_GAME]);
 void drawSubGames(SubGame *subGame, Sprite sprites[NUM_SPRITES_GAME]);
 void freeSubGames(SubGame *subGame);
 
@@ -36,19 +36,20 @@ void initSubGame(SubGame *subGame) {
   printf("init subgame end\n");
 }
 
-void updateSubGames(SubGame *subGame, int levelTime, int *score, Sprite sprites[NUM_SPRITES_GAME]) {
+int updateSubGames(SubGame *subGame, int levelTime, Sprite sprites[NUM_SPRITES_GAME]) {
   printf("update subgame start\n");
-  score += 100;
+  int score = 0;
   if(levelTime) {
     generateEnemies(subGame, levelTime, sprites);
   }
   
   updateTowers(subGame);
-  updateEnemies(subGame, score, sprites);
+  score += updateEnemies(subGame, sprites);
   updateBullets(subGame);
   if (subGame->next != NULL)
-    updateSubGames(subGame->next, levelTime, score, sprites);
+    score += updateSubGames(subGame->next, levelTime, sprites);
   printf("update subgame end\n");
+  return score;
 };
 
 void drawSubGames(SubGame *subGame, Sprite sprites[NUM_SPRITES_GAME]) {
