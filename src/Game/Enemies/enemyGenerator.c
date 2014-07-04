@@ -3,6 +3,7 @@
 extern void initEnemy(Enemy *enemy, int type, Grid_Tile *startGrid, Sprite sprites[]);
 
 void initEnemyGenerator(SubGame *subGame){
+  printf("init enemy generator start\n");
   int i,j,k;
   for(i=0;i<NUM_ENEMIES; i++)
     for(j=0; j<MAX_WAVES; j++)
@@ -65,9 +66,11 @@ void initEnemyGenerator(SubGame *subGame){
     }
   }
 */ 
+  printf("init enemy generator end\n");
 };
 
 void generateEnemies(SubGame *subGame, int levelTime, Sprite sprites[NUM_SPRITES_GAME]){
+  printf("gen enemies start\n");
   if(subGame->enemyGenerator.wave >= subGame->enemyGenerator.maxWave)
     return;  
 
@@ -108,4 +111,5 @@ void generateEnemies(SubGame *subGame, int levelTime, Sprite sprites[NUM_SPRITES
     levelTime = 0;
     subGame->enemyGenerator.wave++;
   }
+  printf("gen enemies end\n");
 };

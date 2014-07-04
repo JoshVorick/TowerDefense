@@ -11,6 +11,7 @@ extern void closeFont(TTF_Font *);
 extern void freeSubGames(SubGame *subGame);
 
 void initGame(Game *game){
+  printf("init game start\n");
   game->totalTime = 0;
   game->levelTime = 0;
   game->inGame = TRUE;
@@ -59,16 +60,20 @@ void initGame(Game *game){
 
   game->subGames = (SubGame*)malloc(sizeof(SubGame));
   initSubGame(game->subGames);
+  printf("init game end\n");
 };
 
 void updateGame(Game *game){
+  printf("update game start\n");
   game->totalTime++;
   if(game->levelTime)
     game->levelTime++;
   updateSubGames(game->subGames, game->levelTime, game->sprites);
+  printf("update game end\n");
 };
 
 void drawGame(Game *game){
+  printf("draw game start\n");
   drawImage(game->sprites[gBACKGROUND].image, 0, 0);
   
   SDL_Rect rect = {game->subGames->grid->selectedTile->x+20, game->subGames->grid->selectedTile->y+20, 10, 10};
@@ -100,9 +105,11 @@ void drawGame(Game *game){
   drawString(str, 0, 0, game->font, 0, 0, game->white, game->gray);
   
   SDL_Flip(screen);
+  printf("draw game end\n");
 };
 
 void freeGame(Game* game){
+  printf("free game start\n");
   int i;
   for(i=0; i<NUM_SPRITES_GAME; i++)
     if(game->sprites[i].image != NULL)
@@ -112,4 +119,5 @@ void freeGame(Game* game){
 
   freeSubGames(game->subGames);
   free(game);
+  printf("free game end\n");
 };

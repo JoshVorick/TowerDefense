@@ -6,6 +6,7 @@ extern void drawImage(SDL_Surface *surface, int x, int y);
 extern void addBullet(SubGame *subGame, Tower *tower, Enemy *enemy);
 
 void updateTowers(SubGame *subGame){
+  printf("update tower start\n");
   //Loop through each tower
   Tower *curTower = subGame->towers;
   while(curTower != NULL){
@@ -22,9 +23,11 @@ void updateTowers(SubGame *subGame){
     }
     curTower = curTower->next;
   }
+  printf("update tower end\n");
 };
 
 int addTower(Game *game, int towerType){
+  printf("add tower start\n");
   if(game->subGames->grid->blocksPath == TRUE)
     return FALSE;
   double total = (game->rgbRatio.r + game->rgbRatio.g + game->rgbRatio.b) / (double)game->towerPrices[game->selectedTower];
@@ -76,24 +79,30 @@ int addTower(Game *game, int towerType){
   newTower->next = game->subGames->towers;
   game->subGames->towers = newTower;
 
+  printf("add tower end\n");
   return TRUE;
 };
 
 Enemy* findEnemyInRange(int x, int y, int radius, Enemy *curEnemy){
+  printf("find enemy start\n");
   while(curEnemy != NULL){
     if(curEnemy->health > 0 && (curEnemy->x - x)*(curEnemy->x - x) + (curEnemy->y - y)*(curEnemy->y - y) <= radius*radius)
       return curEnemy;
     else
       curEnemy = curEnemy-> next;
   }
+  printf("find enemy end\n");
   return NULL;
 };
 
 void towerShoot(Enemy *enemy, Tower *tower){
+  printf("tower shoot start\n");
   enemy->health -= tower->dmg;
+  printf("tower shoot end\n");
 };
 
 void drawTowers(SubGame *subGame, Sprite sprites[NUM_SPRITES_GAME]){
+  printf("draw towers start\n");
   Tower *curTower = subGame->towers;
   while(curTower != NULL){
     SDL_Rect rect = {curTower->x, curTower->y, 50, 50};
@@ -101,4 +110,5 @@ void drawTowers(SubGame *subGame, Sprite sprites[NUM_SPRITES_GAME]){
     drawImage(sprites[curTower->type].image, curTower->x, curTower->y);
     curTower = curTower->next;
   }
+  printf("draw towers end\n");
 };

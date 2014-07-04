@@ -6,6 +6,7 @@ void initInputStartMenu(StartMenu *startMenu){
 };
 
 void getInputStartMenu(StartMenu *startMenu){
+  printf("get input startmenu start\n");
   SDL_Event event;
 
   while(SDL_PollEvent(&event)){
@@ -27,4 +28,5 @@ void getInputStartMenu(StartMenu *startMenu){
         break;
     }
   }
+  printf("get input startmenu end\n");
 };

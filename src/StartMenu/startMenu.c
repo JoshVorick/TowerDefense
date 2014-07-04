@@ -6,6 +6,7 @@ extern SDL_Surface *loadImage(char* name);
 extern void drawImage(SDL_Surface *surface, int x, int y);
 
 void initStartMenu(StartMenu *startMenu){
+  printf("init startmenu start\n");
   //assign variables
   startMenu->atStartMenu = TRUE;
   initInputStartMenu(startMenu);
@@ -19,6 +20,7 @@ void initStartMenu(StartMenu *startMenu){
 
   //load images
   startMenu->sprites[sBACKGROUND].image = loadImage("img/StartBackground.png");
+  printf("init startmenu end");
 };
 
 void updateStartMenu(StartMenu *startMenu){
@@ -26,18 +28,22 @@ void updateStartMenu(StartMenu *startMenu){
 };
 
 void drawStartMenu(StartMenu *startMenu){
+  printf("draw StartMenu start\n");
   drawImage(startMenu->sprites[sBACKGROUND].image, 0, 0);
   
   char *str = "Press any key to start game!";
   drawString(str, 0, 0, startMenu->font, 1, 1, startMenu->fontColor, startMenu->fontBGColor);
 
   SDL_Flip(screen);
+  printf("draw startmenu end\n");
 };
 
 void freeStartMenu(StartMenu *startMenu){
+  printf("free startmenu start\n");
   //Set the variables free!!
   TTF_CloseFont(startMenu->font);
   int i;
   for(i=0;i<NUM_SPRITES_STARTMENU;i++)
     SDL_FreeSurface(startMenu->sprites[i].image);
+  printf("free startmenu end\n");
 };

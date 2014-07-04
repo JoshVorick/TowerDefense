@@ -1,6 +1,7 @@
 #include "enemies.h"
 
 void initEnemy(Enemy *enemy, int type, Grid_Tile *startGrid, Sprite sprites[]){
+  printf("init enemy start\n");
   enemy->x = startGrid->x - sprites[type].image->w/2 + sprites[GRID_TILE].image->w/2;
   enemy->y = startGrid->y - sprites[type].image->h/2;
   enemy->type = type;
@@ -30,9 +31,11 @@ void initEnemy(Enemy *enemy, int type, Grid_Tile *startGrid, Sprite sprites[]){
     default:
       break;
   }
+  printf("init enemy end\n");
 }
 
 Enemy* msortEnemies(Enemy *head){
+  printf("sort enemy start\n");
   if(head == NULL)
     return NULL;
 
@@ -98,9 +101,11 @@ Enemy* msortEnemies(Enemy *head){
 
     insize *= 2;
   }
+  printf("sort enemy end\n");
 };
 
 void updateEnemies(Game *game){
+  printf("update enemy start\n");
   Enemy *curEnemy = game->subGames->enemies;
   Enemy *prevEnemy = NULL;
   while(curEnemy != NULL){
@@ -168,5 +173,6 @@ void updateEnemies(Game *game){
     }
   }
   game->subGames->enemies = msortEnemies(game->subGames->enemies);
+  printf("update enemy end\n");
 };
 

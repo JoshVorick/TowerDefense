@@ -17,6 +17,7 @@ findPath-
 
 //calculate the path. Return TRUE if there is one, FALSE if there isn't one
 int findPath(Grid *grid){
+  printf("find path start\n");
   int startTicks = SDL_GetTicks();//to find start time
   
   int i,j;
@@ -103,11 +104,13 @@ int findPath(Grid *grid){
   }
   printf("ticks used to calculate path: %i \n",SDL_GetTicks()-startTicks); //to get end time
 
+  printf("find path end\n");
   return grid->startTile->nextInPath != NULL; 
 };
 
 //calculates if adding a tower to 'selectedGrid' would block path
 void wouldBlockPath(Grid *grid){
+  printf("would block path start\n");
   if(grid->selectedTile->myTower == NULL){
     //Pretend like there is a tower there
     grid->selectedTile->myTower = NULL + 1;
@@ -120,4 +123,5 @@ void wouldBlockPath(Grid *grid){
     findPath(grid);
   }else //If theres a tower, it blocks the path
     grid->blocksPath = TRUE;
+  printf("would block path end\n");
 };

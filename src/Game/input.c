@@ -9,6 +9,7 @@ void initInputGame(Game *game){
 };
 
 void getInputGame(Game *game){
+  printf("get input game start\n"); 
   SDL_Event event;
 
   while(SDL_PollEvent(&event)){
@@ -212,4 +213,5 @@ void getInputGame(Game *game){
         break;
     }
   }
+  printf("get input game end\n");
 };

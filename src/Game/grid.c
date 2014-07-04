@@ -1,6 +1,7 @@
 #include "grid.h"
 
 void initGrid(Grid* grid, int x, int y){
+  printf("init grid start\n"); 
   int i;
   for(i=0; i<grid->dimensionX; i++)
     grid->tiles[i] = (Grid_Tile*)malloc(grid->dimensionY * sizeof(Grid_Tile));
@@ -32,11 +33,14 @@ void initGrid(Grid* grid, int x, int y){
   grid->endTile->next = NULL;
   grid->endTile->x = grid->tiles[3][grid->dimensionY-1].x + 50;
   grid->endTile->y = grid->tiles[3][grid->dimensionY-1].y + 50;
+  printf("init grid end\n");
 };
 
 void freeGrid(Grid* grid){
+  printf("free grid start\n");
   int i;
   for(i=0; i<grid->dimensionX; i++)
     free(grid->tiles[i]);
   free(grid);
+  printf("free grid end\n");
 };

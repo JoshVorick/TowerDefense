@@ -17,6 +17,7 @@ void drawSubGames(SubGame *subGame, Sprite sprites[NUM_SPRITES_GAME]);
 void freeSubGames(SubGame *subGame);
 
 void initSubGame(SubGame *subGame) {
+  printf("init subgame start\n");
   subGame->lives = 20;
   subGame->rStored = 1500;
   subGame->gStored = 1500;
@@ -32,9 +33,11 @@ void initSubGame(SubGame *subGame) {
   subGame->grid->dimensionY = 12;
   subGame->grid->tiles = (Grid_Tile**)malloc(subGame->grid->dimensionX*sizeof(Grid_Tile));
   initGrid(subGame->grid, 100, 60);
+  printf("init subgame end\n");
 }
 
 void updateSubGames(SubGame *subGame, int levelTime, Sprite sprites[NUM_SPRITES_GAME]) {
+  printf("update subgame start\n");
   if(levelTime) {
     generateEnemies(subGame, levelTime, sprites);
   }
@@ -44,9 +47,11 @@ void updateSubGames(SubGame *subGame, int levelTime, Sprite sprites[NUM_SPRITES_
   updateBullets(subGame);
   if (subGame->next != NULL)
     updateSubGames(subGame->next, levelTime, sprites);
+  printf("update subgame end\n");
 };
 
 void drawSubGames(SubGame *subGame, Sprite sprites[NUM_SPRITES_GAME]) {
+  printf("draw subgame start\n");
   int i,j;
   for(i=0; i<subGame->grid->dimensionX; i++) {
     for(j=0; j<subGame->grid->dimensionY; j++) {
@@ -70,9 +75,11 @@ void drawSubGames(SubGame *subGame, Sprite sprites[NUM_SPRITES_GAME]) {
 
   if (subGame->next != NULL)
     drawSubGames(subGame->next, sprites);
+  printf("draw subgame end\n");
 };
 
 void freeSubGames(SubGame *subGame) {
+  printf("free sub game start\n");
   freeGrid(subGame->grid);
   
   Enemy *temp, *curEnemy = subGame->enemies;
@@ -92,4 +99,5 @@ void freeSubGames(SubGame *subGame) {
     freeSubGames(subGame->next);
   }
   free(subGame);
+  printf("free sub game end\n");
 };

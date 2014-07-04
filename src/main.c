@@ -21,6 +21,7 @@ extern void drawGame(Game *game);
 extern void freeGame(Game *game); //A free game!? Where?! Oh! Its right here!!
 
 int main(void){
+  printf("main start\n");
   unsigned int fpsLimit = 16;
   int playing = TRUE;
   
@@ -65,5 +66,6 @@ int main(void){
 
     freeGame(game);
   }
+  printf("main end\n");
   exit(0);
 }

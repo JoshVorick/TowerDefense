@@ -1,6 +1,7 @@
 #include "towers.h"
 
 void addBullet(SubGame *subGame, Tower *tower, Enemy *enemy){
+  printf("add bullet start\n");
   Bullet *newBullet;
   newBullet = malloc(sizeof(Bullet));
   newBullet->origin = tower;
@@ -11,9 +12,11 @@ void addBullet(SubGame *subGame, Tower *tower, Enemy *enemy){
  
   newBullet->nextBullet = subGame->bullets;
   subGame->bullets = newBullet;
+  printf("add bullet end\n");
 };
 
 void updateBullets(SubGame *subGame){
+  printf("update bullet start\n");
   Bullet *curBullet = subGame->bullets;
   Bullet *prevBullet = NULL;
   while(curBullet != NULL){
@@ -32,9 +35,11 @@ void updateBullets(SubGame *subGame){
       curBullet = curBullet->nextBullet;
     }
   }
+  printf("update bullet end\n");
 };
 
 void drawBullets(SubGame *subGame){
+  printf("draw bullet start\n");
   Bullet *curBullet = subGame->bullets;
   float x, y, stepX, stepY;
   int  i;
@@ -51,4 +56,5 @@ void drawBullets(SubGame *subGame){
     }
     curBullet = curBullet->nextBullet;
   }
+  printf("draw bullet end\n");
 };
