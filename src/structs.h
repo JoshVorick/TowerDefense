@@ -14,7 +14,7 @@ typedef struct StartMenu{
 typedef struct Tower{
   int dmg, kills, type, fireRate, ticksSinceFired, range;
   float x, y, health; 
-  struct Tower *nextTower;
+  struct Tower *next;
   SDL_Color color;
   /*width, cost, dmg, fireRate, sellPrice, etc will be constants in defs.h*/
 } Tower;
@@ -38,7 +38,7 @@ typedef struct Enemy{
   int type, health, maxHealth, score, dir; /*Direction enemy is walking in*/
   SDL_Color color;
   Grid_Tile *curTile;
-  struct Enemy *nextEnemy;
+  struct Enemy *next;
   /*width, goldForKilling, totalHealth, speed stored as constants in defs.h 
     Something about its path/pathfinding (pointer to struct/var with its path?)
     */
@@ -56,18 +56,23 @@ typedef struct Bullet{
   struct Bullet *nextBullet;
 } Bullet;
 
-typedef struct Game{
-  int totalTime, levelTime, inGame, score, selectedTowerType, lives;
-  int rStored, gStored, bStored; //RGB resources for buying towers
-  int rRatio, gRatio, bRatio; //Ratio of R:G:B to be used when next tower is bought
-  int towerPrices[NUM_TOWERS];
-  int keys[NUM_GAME_KEYS];
-  Sprite sprites[NUM_SPRITES_GAME];
+typedef struct SubGame{
+  int lives, rStored, gStored, bStored; //RGB resources for buying towers
   Grid *grid; /*grid of the game*/
   Tower *towers; /*Linked list*/
   Bullet *bullets;
   Enemy *enemies;
   EnemyGenerator enemyGenerator;
+  struct SubGame *next;
+} SubGame;
+
+typedef struct Game {
+  int totalTime, levelTime, inGame, score, selectedTower;
+  int keys[NUM_GAME_KEYS];
+  int towerPrices[NUM_TOWERS];
+  SDL_Color rgbRatio;
+  SubGame *subGames;
+  Sprite sprites[NUM_SPRITES_GAME];
+  SDL_Color white, gray, red, green, blue;
   TTF_Font *font;
-  SDL_Color white, red, green, blue, gray;
 } Game;

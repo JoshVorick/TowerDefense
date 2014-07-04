@@ -1,50 +1,34 @@
 #include "game.h"
 
-extern void initInputGame(Game *game);
-extern void initGrid(Grid* grid, int x, int y);
-extern void initEnemyGenerator(Game*game);
-extern void addEnemies(Game *game);
-extern void updateTowers(Game *game);
-extern void updateBullets(Game *game);
-extern void updateEnemies(Game *game);
-extern Enemy* msortEnemies(Enemy* enemy);
-extern void closeFont(TTF_Font *);
-extern void drawString(char *text, int x, int y, TTF_Font *font, int centerX, int centerY, SDL_Color foregroundColor, SDL_Color backgroundColor);
 extern SDL_Surface *loadImage(char *name);
+extern void initInputGame(Game *game);
+extern void initSubGame(SubGame *subGame);
+extern void updateSubGames(SubGame *subGame, int levelTime);
+extern void drawString(char *text, int x, int y, TTF_Font *font, int centerX, int centerY, SDL_Color foregroundColor, SDL_Color backgroundColor);
 extern void drawImage(SDL_Surface *surface, int x, int y);
-extern void drawTowers(Game *game);
-extern void drawBullets(Game *game);
-extern void freeGrid(Grid *grid);
-extern void findPath(Game *game);
+extern void closeFont(TTF_Font *);
+extern void freeSubGames(SubGame *subGame);
 
 void initGame(Game *game){
   game->totalTime = 0;
   game->levelTime = 0;
   game->inGame = TRUE;
   game->score = 0;
-  game->selectedTowerType = TRIANGLE;
-  game->lives = 20;
-  game->rStored = 3000;
-  game->gStored = 3000;
-  game->bStored = 3000;
-  game->rRatio = 20;
-  game->gRatio = 20;
-  game->bRatio = 20;
+  game->selectedTower = TRIANGLE;
+  game->rgbRatio.r = 90;
+  game->rgbRatio.g = 90;
+  game->rgbRatio.b = 90;
   
   int i;
   for(i=0;i<NUM_GAME_KEYS;i++)
     game->keys[i] = FALSE;
   
-  game->towerPrices[TRIANGLE] = TRIANGLE_PRICE;
-  game->towerPrices[SQUARE] = SQUARE_PRICE;
-  game->towerPrices[PENTAGON] = PENTAGON_PRICE;
-  game->towerPrices[HEXAGON] = HEXAGON_PRICE;
+  game->towerPrices[TRIANGLE] = TRIANGLE;
+  game->towerPrices[SQUARE] = SQUARE;
+  game->towerPrices[PENTAGON] = PENTAGON;
+  game->towerPrices[HEXAGON] = HEXAGON;
 
   initInputGame(game);
-  initEnemyGenerator(game);
-  game->towers = NULL;
-  game->enemies = NULL;
-  game->bullets = NULL;
 
   game->sprites[gBACKGROUND].image = loadImage("img/GameBackground.png");
   game->sprites[GRID_TILE].image = loadImage("img/Grid_Tile.png");
@@ -72,74 +56,44 @@ void initGame(Game *game){
   game->gray.g = 10;
   game->gray.b = 10;
 
-  game->grid = malloc(sizeof(Grid));
-  game->grid->dimensionX = 7;
-  game->grid->dimensionY = 12;
-  game->grid->tiles = (Grid_Tile**)malloc(game->grid->dimensionX*sizeof(Grid_Tile));
-  initGrid(game->grid, 100, 60);
+  game->subGames = (SubGame*)malloc(sizeof(SubGame));
+  initSubGame(game->subGames);
 };
 
 void updateGame(Game *game){
   game->totalTime++;
-  if(game->levelTime){
+  if(game->levelTime)
     game->levelTime++;
-    addEnemies(game);//Adds enemies and checks if level is finished
-  }
-
-  updateTowers(game);
-  updateEnemies(game);
-  updateBullets(game);
+  updateSubGames(game->subGames, game->levelTime);
 };
 
 void drawGame(Game *game){
   drawImage(game->sprites[gBACKGROUND].image, 0, 0);
   
-  int i,j;
-  
-  for(i=0; i < game->grid->dimensionX; i++)
-    for(j=0; j < game->grid->dimensionY; j++){
-      drawImage(game->sprites[GRID_TILE].image, game->grid->tiles[i][j].x, game->grid->tiles[i][j].y);
-      char str[1];
-      sprintf(str, "%i", game->grid->tiles[i][j].distFromExit);
-      drawString(str, game->grid->tiles[i][j].x, game->grid->tiles[i][j].y, game->font, 0, 0, game->white, game->gray);
-  }
-
-  drawTowers(game);
-
-  Enemy *curEnemy = game->enemies;
-  while(curEnemy != NULL){
-    drawImage(game->sprites[curEnemy->type].image, curEnemy->x, curEnemy->y);
-
-    //draw health bar
-    SDL_Rect rect = {curEnemy->x, curEnemy->y, game->sprites[curEnemy->type].image->w, 4};
-    SDL_FillRect(screen, &rect, 0xAAAAAA);
-    rect.w = game->sprites[curEnemy->type].image->w * curEnemy->health / curEnemy->maxHealth;
-    SDL_FillRect(screen, &rect, 0xFF0000);
-    curEnemy = curEnemy->nextEnemy;
-  }
-  
-  drawBullets(game);
-  
-  SDL_Rect rect = {game->grid->selectedTile->x+20, game->grid->selectedTile->y+20, 10, 10};
-  SDL_FillRect(screen, &rect, SDL_MapRGB(screen->format, game->rRatio, game->gRatio, game->bRatio));
+  SDL_Rect rect = {game->subGames->grid->selectedTile->x+20, game->subGames->grid->selectedTile->y+20, 10, 10};
+  SDL_FillRect(screen, &rect, SDL_MapRGB(screen->format, game->rgbRatio.r, game->rgbRatio.g, game->rgbRatio.b));
   
   char str[20];
-  drawString("Press M to go to Menu", 0, 667, game->font, 1, 0, game->white, game->gray);
-  sprintf(str, "Score: %d", game->score);
-  drawString(str, 0, 650, game->font, 1, 0, game->white, game->gray);
-  sprintf(str, "Red: %i", game->rStored);
-  drawString(str, 0, 17, game->font, 0, 0, game->red, game->gray);
-  sprintf(str, "Green: %i", game->gStored);
-  drawString(str, 0, 34, game->font, 0, 0, game->green, game->gray);
-  sprintf(str, "Blue: %i", game->bStored);
-  drawString(str, 0, 51, game->font, 0, 0, game->blue, game->gray);
-  sprintf(str, "R:G:B =  %i, %i, %i", game->rRatio, game->gRatio, game->bRatio);
-  drawString(str, 0, 0, game->font, 0, 0, game->white, game->gray);
-  sprintf(str, "Lives: %i", game->lives);
-  drawString(str, 0, 68, game->font, 0, 0, game->white, game->gray);
-  
-  double total = (game->rRatio + game->gRatio + game->bRatio) / (double)game->towerPrices[game->selectedTowerType];
-  sprintf(str, "Cost for selected Tower: %d,%d,%d", (int)(game->rRatio/total), (int)(game->gRatio/total), (int)(game->bRatio/total));
+  SubGame *curSub = game->subGames;
+  while(curSub != NULL) {
+    drawString("Press M to go to Menu", 0, 667, game->font, 1, 0, game->white, game->gray);
+    sprintf(str, "Score: %d", game->score);
+    drawString(str, 0, 650, game->font, 1, 0, game->white, game->gray);
+    sprintf(str, "Red: %i", game->subGames->rStored);
+    drawString(str, 0, 17, game->font, 0, 0, game->red, game->gray);
+    sprintf(str, "Green: %i", game->subGames->gStored);
+    drawString(str, 0, 34, game->font, 0, 0, game->green, game->gray);
+    sprintf(str, "Blue: %i", game->subGames->bStored);
+    drawString(str, 0, 51, game->font, 0, 0, game->blue, game->gray);
+    sprintf(str, "R:G:B =  %i, %i, %i", game->rgbRatio.r, game->rgbRatio.g, game->rgbRatio.b);
+    drawString(str, 0, 0, game->font, 0, 0, game->white, game->gray);
+    sprintf(str, "Lives: %i", game->subGames->lives);
+    drawString(str, 0, 68, game->font, 0, 0, game->white, game->gray);
+    
+    curSub = curSub->next;
+  }
+  double total = (game->rgbRatio.r + game->rgbRatio.g + game->rgbRatio.b) / (double)game->towerPrices[game->selectedTower];
+  sprintf(str, "Cost for selected Tower: %d,%d,%d", (int)(game->rgbRatio.r/total), (int)(game->rgbRatio.g/total), (int)(game->rgbRatio.b/total));
   drawString(str, 0, 0, game->font, 0, 0, game->white, game->gray);
   
   SDL_Flip(screen);
@@ -151,22 +105,8 @@ void freeGame(Game* game){
     if(game->sprites[i].image != NULL)
       SDL_FreeSurface(game->sprites[i].image);
   
-  freeGrid(game->grid);
   TTF_CloseFont(game->font);
 
-  Enemy *curEnemy = game->enemies;
-  Enemy *tempE;
-  while(curEnemy != NULL){
-    tempE = curEnemy;
-    curEnemy = curEnemy->nextEnemy;
-    free(tempE);
-  }
-
-  Tower *curTower = game->towers;
-  Tower *tempT;
-  while(curTower != NULL){
-    tempT = curTower;
-    curTower = curTower->nextTower;
-    free(tempT);
-  }
+  freeSubGames(game->subGames);
+  free(game);
 };
