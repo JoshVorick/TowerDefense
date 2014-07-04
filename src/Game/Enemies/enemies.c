@@ -6,7 +6,7 @@ void initEnemy(Enemy *enemy, int type, Grid_Tile *startGrid, Sprite sprites[]){
   enemy->type = type;
   enemy->dir = DOWN;
   enemy->curTile = startGrid;
-  enemy->nextEnemy = NULL;
+  enemy->next = NULL;
 
   switch(type){
     case ENEMY1:
@@ -55,7 +55,7 @@ Enemy* msortEnemies(Enemy *head){
       psize = 0;
       for(i=0; i < insize; i++){
         psize++;
-        q = q->nextEnemy;
+        q = q->next;
         if(q== NULL) 
           break;
       }
@@ -66,24 +66,24 @@ Enemy* msortEnemies(Enemy *head){
         //Decide if next enemy is in p or q
         if(psize == 0){
           e = q;
-          q = q->nextEnemy;
+          q = q->next;
           qsize--;
         }else if(qsize == 0 || q == NULL){
           e = p;
-          p = p->nextEnemy;
+          p = p->next;
           psize--;
         }else if(p->curTile != NULL && q->curTile != NULL && (p->curTile->distFromExit < q->curTile->distFromExit || (p->curTile->distFromExit == q->curTile->distFromExit && p->y > q->y))){
           e = p;
-          p = p->nextEnemy;
+          p = p->next;
           psize--;
         }else{
           e = q;
-          q = q->nextEnemy;
+          q = q->next;
           qsize--;
         }
 
         if(tail)
-          tail->nextEnemy = e;
+          tail->next = e;
         else
           head = e;
 
@@ -91,7 +91,7 @@ Enemy* msortEnemies(Enemy *head){
       }
       p = q;
     }
-    tail->nextEnemy = NULL;
+    tail->next = NULL;
     
     if(nmerges <= 1)
       return head;
@@ -101,28 +101,28 @@ Enemy* msortEnemies(Enemy *head){
 };
 
 void updateEnemies(Game *game){
-  Enemy *curEnemy = game->enemies;
+  Enemy *curEnemy = game->subGames->enemies;
   Enemy *prevEnemy = NULL;
   while(curEnemy != NULL){
-    if (curEnemy->curTile == game->grid->endTile && curEnemy->y + game->sprites[curEnemy->type].image->h / 2 >= curEnemy->curTile->y) {
+    if (curEnemy->curTile == game->subGames->grid->endTile && curEnemy->y + game->sprites[curEnemy->type].image->h / 2 >= curEnemy->curTile->y) {
       curEnemy-> health = -9999;
-      game->lives -= 1;
+      game->subGames->lives -= 1;
     }
     //Remove enemy if its dead, add to score
     if(curEnemy->health <= 0){
       if (curEnemy ->health > -9999) {
         game->score += curEnemy->score;
-        game->rStored += curEnemy->color.r;
-        game->gStored += curEnemy->color.g;
-        game->bStored += curEnemy->color.b;
+        game->subGames->rStored += curEnemy->color.r;
+        game->subGames->gStored += curEnemy->color.g;
+        game->subGames->bStored += curEnemy->color.b;
       }
       Enemy *temp = curEnemy;
       if(prevEnemy != NULL){//If curEnemy is not first in list
-        prevEnemy->nextEnemy = curEnemy->nextEnemy;
-        curEnemy = curEnemy->nextEnemy; //iterate to next enemy
+        prevEnemy->next = curEnemy->next;
+        curEnemy = curEnemy->next; //iterate to next enemy
       }else{//If curEnemy IS first in list
-        game->enemies = curEnemy->nextEnemy;
-        curEnemy = curEnemy->nextEnemy;//iterate to next enemy
+        game->subGames->enemies = curEnemy->next;
+        curEnemy = curEnemy->next;//iterate to next enemy
       }
       free(temp);
     }else{
@@ -164,9 +164,9 @@ void updateEnemies(Game *game){
 
       //iterate to next enemy
       prevEnemy = curEnemy;
-      curEnemy = curEnemy->nextEnemy;
+      curEnemy = curEnemy->next;
     }
   }
-  game->enemies = msortEnemies(game->enemies);
+  game->subGames->enemies = msortEnemies(game->subGames->enemies);
 };
 

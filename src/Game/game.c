@@ -3,9 +3,10 @@
 extern SDL_Surface *loadImage(char *name);
 extern void initInputGame(Game *game);
 extern void initSubGame(SubGame *subGame);
-extern void updateSubGames(SubGame *subGame, int levelTime);
+extern void updateSubGames(SubGame *subGame, int levelTime, Sprite sprites[NUM_SPRITES_GAME]);
 extern void drawString(char *text, int x, int y, TTF_Font *font, int centerX, int centerY, SDL_Color foregroundColor, SDL_Color backgroundColor);
 extern void drawImage(SDL_Surface *surface, int x, int y);
+extern void drawSubGames(SubGame *subGame, Sprite sprites[NUM_SPRITES_GAME]);
 extern void closeFont(TTF_Font *);
 extern void freeSubGames(SubGame *subGame);
 
@@ -64,7 +65,7 @@ void updateGame(Game *game){
   game->totalTime++;
   if(game->levelTime)
     game->levelTime++;
-  updateSubGames(game->subGames, game->levelTime);
+  updateSubGames(game->subGames, game->levelTime, game->sprites);
 };
 
 void drawGame(Game *game){
@@ -73,6 +74,8 @@ void drawGame(Game *game){
   SDL_Rect rect = {game->subGames->grid->selectedTile->x+20, game->subGames->grid->selectedTile->y+20, 10, 10};
   SDL_FillRect(screen, &rect, SDL_MapRGB(screen->format, game->rgbRatio.r, game->rgbRatio.g, game->rgbRatio.b));
   
+  drawSubGame(subGame, game->sprites);
+
   char str[20];
   SubGame *curSub = game->subGames;
   while(curSub != NULL) {

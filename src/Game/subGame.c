@@ -2,17 +2,17 @@
 
 extern void initGrid(Grid *grid, int x, int y);
 extern void initEnemyGenerator(SubGame *subGame);
-extern void generateEnemies(SubGame *subGame);
+extern void generateEnemies(SubGame *subGame, Sprite sprites[NUM_SPRITES_GAME]);
 extern void updateTowers(SubGame *subGame);
 extern void updateBullets(SubGame *subGame);
 extern void updateEnemies(SubGame *subGame);
 extern void findPath(SubGame *subGame);
 extern void drawImage(SDL_Surface *surface, int x, int y);
-extern void drawTowers(SubGame *subGame);
-extern void drawBullets(SubGame *subGame);
+extern void drawTowers(SubGame *subGame, Sprite sprites[NUM_SPRITES_GAME]);
+extern void drawBullets(SubGame *subGame, Sprite sprites[NUM_SPRITES_GAME]);
 extern void freeGrid(Grid *grid);
 
-void updateSubGames(SubGame *subGame, int levelTime);
+void updateSubGames(SubGame *subGame, int levelTime, Sprite sprites[NUM_SPRITES_GAME]);
 void freeSubGames(SubGame *subGame);
 
 void initSubGame(SubGame *subGame) {
@@ -33,9 +33,9 @@ void initSubGame(SubGame *subGame) {
   initGrid(subGame->grid, 100, 60);
 }
 
-void updateSubGames(SubGame *subGame, int levelTime) {
+void updateSubGames(SubGame *subGame, int levelTime, Sprite sprites[NUM_SPRITES_GAME]) {
   if(levelTime) {
-    generateEnemies(subGame);
+    generateEnemies(subGame, levelTime, sprites);
   }
   
   updateTowers(subGame);
@@ -52,7 +52,7 @@ void drawSubGames(SubGame *subGame, Sprite sprites[NUM_SPRITES_GAME]) {
       drawImage(sprites[GRID_TILE].image, subGame->grid->tiles[i][j].x, subGame->grid->tiles[i][j].y);
     }
   }
-  drawTowers(subGame);
+  drawTowers(subGame, sprites);
   
   Enemy *curEnemy = subGame->enemies;
   while(curEnemy != NULL) {
@@ -65,7 +65,7 @@ void drawSubGames(SubGame *subGame, Sprite sprites[NUM_SPRITES_GAME]) {
     SDL_FillRect(screen, &rect, 0xFF0000);
   }
   
-  drawBullets(subGame);  
+  drawBullets(subGame, sprites);  
 };
 
 void freeSubGames(SubGame *subGame) {
