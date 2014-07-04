@@ -25,10 +25,10 @@ void initGame(Game *game){
   for(i=0;i<NUM_GAME_KEYS;i++)
     game->keys[i] = FALSE;
   
-  game->towerPrices[TRIANGLE] = TRIANGLE;
-  game->towerPrices[SQUARE] = SQUARE;
-  game->towerPrices[PENTAGON] = PENTAGON;
-  game->towerPrices[HEXAGON] = HEXAGON;
+  game->towerPrices[TRIANGLE] = TRIANGLE_PRICE;
+  game->towerPrices[SQUARE] = SQUARE_PRICE;
+  game->towerPrices[PENTAGON] = PENTAGON_PRICE;
+  game->towerPrices[HEXAGON] = HEXAGON_PRICE;
 
   initInputGame(game);
 

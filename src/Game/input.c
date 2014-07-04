@@ -1,6 +1,6 @@
 #include "input.h"
 
-extern int addTower(Game *game, int tower);
+extern int addTower(SubGame *subGame, int towerType, int towerPrice, SDL_Color rgbRatio);
 extern void wouldBlockPath(Grid *grid);
 extern void findPath(Grid *grid);
 extern void freeGame(Game *game);
@@ -88,7 +88,7 @@ void getInputGame(Game *game){
             break;
           
           case SDLK_SPACE:
-            if(addTower(game, game->selectedTower) == TRUE)//returns true if tower was added
+            if(addTower(game->subGames, game->selectedTower, game->towerPrices[game->selectedTower], game->rgbRatio) == TRUE)//returns true if tower was added
               findPath(game->subGames->grid);
             game->keys[SPACE] = TRUE;
             break;

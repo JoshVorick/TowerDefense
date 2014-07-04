@@ -25,26 +25,26 @@ void updateTowers(SubGame *subGame){
   printf("update tower end\n");
 };
 
-int addTower(Game *game, int towerType){
+int addTower(SubGame *subGame, int towerType, int towerPrice, SDL_Color rgbRatio){
   printf("add tower start\n");
-  if(game->subGames->grid->blocksPath == TRUE)
+  if(subGame->grid->blocksPath == TRUE)
     return FALSE;
-  double total = (game->rgbRatio.r + game->rgbRatio.g + game->rgbRatio.b) / (double)game->towerPrices[game->selectedTower];
-  if(game->subGames->rStored < game->rgbRatio.r / total || game->subGames->gStored < game->rgbRatio.g/total || game->subGames->bStored < game->rgbRatio.b/total)
+  double total = (rgbRatio.r + rgbRatio.g + rgbRatio.b) / ((double)towerPrice);
+  if(subGame->rStored < rgbRatio.r / total || subGame->gStored < rgbRatio.g/total || subGame->bStored < rgbRatio.b/total)
     return FALSE;
   
-  game->subGames->rStored -= (int)(game->rgbRatio.r / total);
-  game->subGames->gStored -= (int)(game->rgbRatio.g / total);
-  game->subGames->bStored -= (int)(game->rgbRatio.b / total);
+  subGame->rStored -= (int)(rgbRatio.r / total);
+  subGame->gStored -= (int)(rgbRatio.g / total);
+  subGame->bStored -= (int)(rgbRatio.b / total);
 
   Tower *newTower = malloc(sizeof(Tower));
   
-  newTower->x = game->subGames->grid->selectedTile->x;
-  newTower->y = game->subGames->grid->selectedTile->y;
+  newTower->x = subGame->grid->selectedTile->x;
+  newTower->y = subGame->grid->selectedTile->y;
   newTower->health = 100;
-  newTower->color.r = game->rgbRatio.r;
-  newTower->color.g = game->rgbRatio.g;
-  newTower->color.b = game->rgbRatio.b;
+  newTower->color.r = rgbRatio.r;
+  newTower->color.g = rgbRatio.g;
+  newTower->color.b = rgbRatio.b;
   newTower->type = towerType;
   newTower->kills = 0;
   newTower->ticksSinceFired = 0;
@@ -72,11 +72,11 @@ int addTower(Game *game, int towerType){
       break;
   }
     
-  game->subGames->grid->selectedTile->myTower = newTower;
+  subGame->grid->selectedTile->myTower = newTower;
     
   //add to list of tower
-  newTower->next = game->subGames->towers;
-  game->subGames->towers = newTower;
+  newTower->next = subGame->towers;
+  subGame->towers = newTower;
 
   printf("add tower end\n");
   return TRUE;
