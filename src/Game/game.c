@@ -3,7 +3,7 @@
 extern SDL_Surface *loadImage(char *name);
 extern void initInputGame(Game *game);
 extern void initSubGame(SubGame *subGame);
-extern void updateSubGames(SubGame *subGame, int levelTime, Sprite sprites[NUM_SPRITES_GAME]);
+extern void updateSubGames(SubGame *subGame, int levelTime, int *score, Sprite sprites[NUM_SPRITES_GAME]);
 extern void drawString(char *text, int x, int y, TTF_Font *font, int centerX, int centerY, SDL_Color foregroundColor, SDL_Color backgroundColor);
 extern void drawImage(SDL_Surface *surface, int x, int y);
 extern void drawSubGames(SubGame *subGame, Sprite sprites[NUM_SPRITES_GAME]);
@@ -58,7 +58,7 @@ void initGame(Game *game){
   game->gray.g = 10;
   game->gray.b = 10;
 
-  game->subGames = (SubGame*)malloc(sizeof(SubGame));
+  game->subGames = malloc(sizeof(SubGame));
   initSubGame(game->subGames);
   printf("init game end\n");
 };
@@ -68,19 +68,19 @@ void updateGame(Game *game){
   game->totalTime++;
   if(game->levelTime)
     game->levelTime++;
-  updateSubGames(game->subGames, game->levelTime, game->sprites);
+  updateSubGames(game->subGames, game->levelTime, &game->score, game->sprites);
   printf("update game end\n");
 };
 
 void drawGame(Game *game){
   printf("draw game start\n");
   drawImage(game->sprites[gBACKGROUND].image, 0, 0);
+ 
+  drawSubGames(game->subGames, game->sprites);
   
   SDL_Rect rect = {game->subGames->grid->selectedTile->x+20, game->subGames->grid->selectedTile->y+20, 10, 10};
   SDL_FillRect(screen, &rect, SDL_MapRGB(screen->format, game->rgbRatio.r, game->rgbRatio.g, game->rgbRatio.b));
-  
-  drawSubGames(game->subGames, game->sprites);
-
+ 
   char str[20];
   SubGame *curSub = game->subGames;
   while(curSub != NULL) {

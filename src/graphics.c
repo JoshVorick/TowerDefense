@@ -8,7 +8,7 @@ SDL_Surface *loadImage(char *name) {
 };
 
 void drawString(char *text, int x, int y, TTF_Font *font, int centerX, int centerY, SDL_Color foregroundColor, SDL_Color backgroundColor){
-  printf("draw string start\n");
+  //printf("draw string start\n");
   SDL_Rect dest;
   SDL_Surface *surface = TTF_RenderUTF8_Shaded(font, text, foregroundColor, backgroundColor);
   if(surface == NULL)
@@ -22,11 +22,11 @@ void drawString(char *text, int x, int y, TTF_Font *font, int centerX, int cente
   SDL_BlitSurface(surface, NULL, screen, &dest);
 
   SDL_FreeSurface(surface);
-  printf("draw string end\n");
+  //printf("draw string end\n");
 };
 
 void drawImage(SDL_Surface *image, int x, int y){
-  printf("draw image start\n");
+  //printf("draw image start\n");
   SDL_Rect dest;
   dest.x = x;
   dest.y = y;
@@ -34,5 +34,5 @@ void drawImage(SDL_Surface *image, int x, int y){
   dest.h = image->h;
 
   SDL_BlitSurface(image, NULL, screen, &dest);
-  printf("draw image end\n");
+  //printf("draw image end\n");
 };
