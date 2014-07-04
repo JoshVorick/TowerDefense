@@ -1,6 +1,6 @@
 #include "towers.h"
 
-void addBullet(Game *game, Tower *tower, Enemy *enemy){
+void addBullet(SubGame *subGame, Tower *tower, Enemy *enemy){
   Bullet *newBullet;
   newBullet = malloc(sizeof(Bullet));
   newBullet->origin = tower;
@@ -9,12 +9,12 @@ void addBullet(Game *game, Tower *tower, Enemy *enemy){
   newBullet->width = 5;//tower->dmg;
   newBullet->time = 0;
  
-  newBullet->nextBullet = game->bullets;
-  game->bullets = newBullet;
+  newBullet->nextBullet = subGame->bullets;
+  subGame->bullets = newBullet;
 };
 
-void updateBullets(Game *game){
-  Bullet *curBullet = game->bullets;
+void updateBullets(SubGame *subGame){
+  Bullet *curBullet = subGame->bullets;
   Bullet *prevBullet = NULL;
   while(curBullet != NULL){
     curBullet->time += 1;
@@ -22,7 +22,7 @@ void updateBullets(Game *game){
       if(prevBullet != NULL)
         prevBullet->nextBullet = curBullet->nextBullet;
       else
-        game->bullets = NULL;
+        subGame->bullets = NULL;
       Bullet *temp = curBullet;
       curBullet = prevBullet;
       free(temp);
@@ -34,8 +34,8 @@ void updateBullets(Game *game){
   }
 };
 
-void drawBullets(Game *game){
-  Bullet *curBullet = game->bullets;
+void drawBullets(SubGame *subGame){
+  Bullet *curBullet = subGame->bullets;
   float x, y, stepX, stepY;
   int  i;
   while(curBullet != NULL){

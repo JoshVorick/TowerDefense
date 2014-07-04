@@ -2,7 +2,7 @@
 
 extern void initGrid(Grid *grid, int x, int y);
 extern void initEnemyGenerator(SubGame *subGame);
-extern void generateEnemies(SubGame *subGame, Sprite sprites[NUM_SPRITES_GAME]);
+extern void generateEnemies(SubGame *subGame, int levelTime, Sprite sprites[NUM_SPRITES_GAME]);
 extern void updateTowers(SubGame *subGame);
 extern void updateBullets(SubGame *subGame);
 extern void updateEnemies(SubGame *subGame);
@@ -13,6 +13,7 @@ extern void drawBullets(SubGame *subGame, Sprite sprites[NUM_SPRITES_GAME]);
 extern void freeGrid(Grid *grid);
 
 void updateSubGames(SubGame *subGame, int levelTime, Sprite sprites[NUM_SPRITES_GAME]);
+void drawSubGames(SubGame *subGame, Sprite sprites[NUM_SPRITES_GAME]);
 void freeSubGames(SubGame *subGame);
 
 void initSubGame(SubGame *subGame) {
@@ -42,7 +43,7 @@ void updateSubGames(SubGame *subGame, int levelTime, Sprite sprites[NUM_SPRITES_
   updateEnemies(subGame);
   updateBullets(subGame);
   if (subGame->next != NULL)
-    updateSubGames(subGame->next, levelTime);
+    updateSubGames(subGame->next, levelTime, sprites);
 };
 
 void drawSubGames(SubGame *subGame, Sprite sprites[NUM_SPRITES_GAME]) {
@@ -66,6 +67,9 @@ void drawSubGames(SubGame *subGame, Sprite sprites[NUM_SPRITES_GAME]) {
   }
   
   drawBullets(subGame, sprites);  
+
+  if (subGame->next != NULL)
+    drawSubGames(subGame->next, sprites);
 };
 
 void freeSubGames(SubGame *subGame) {

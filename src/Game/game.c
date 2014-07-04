@@ -74,7 +74,7 @@ void drawGame(Game *game){
   SDL_Rect rect = {game->subGames->grid->selectedTile->x+20, game->subGames->grid->selectedTile->y+20, 10, 10};
   SDL_FillRect(screen, &rect, SDL_MapRGB(screen->format, game->rgbRatio.r, game->rgbRatio.g, game->rgbRatio.b));
   
-  drawSubGame(subGame, game->sprites);
+  drawSubGames(game->subGames, game->sprites);
 
   char str[20];
   SubGame *curSub = game->subGames;
