@@ -1,18 +1,17 @@
 #include "subGame.h"
 
 extern void initGrid(Grid *grid, int x, int y);
-extern void initEnemyGenerator(SubGame *subGame);
-extern void generateEnemies(SubGame *subGame, int levelTime, Sprite sprites[NUM_SPRITES_GAME]);
+extern void initEnemyGenerator(EnemyGenerator *enemyGenerator);
+extern void generateEnemies(SubGame *subGame, Sprite sprites[NUM_SPRITES_GAME]);
 extern void updateTowers(SubGame *subGame);
 extern void updateBullets(SubGame *subGame);
 extern int updateEnemies(SubGame *subGame, Sprite sprites[NUM_SPRITES_GAME]);
-extern void findPath(SubGame *subGame);
 extern void drawImage(SDL_Surface *surface, int x, int y);
 extern void drawTowers(SubGame *subGame, Sprite sprites[NUM_SPRITES_GAME]);
 extern void drawBullets(SubGame *subGame, Sprite sprites[NUM_SPRITES_GAME]);
 extern void freeGrid(Grid *grid);
 
-int updateSubGames(SubGame *subGame, int levelTime, Sprite sprites[NUM_SPRITES_GAME]);
+int updateSubGames(SubGame *subGame, Sprite sprites[NUM_SPRITES_GAME]);
 void drawSubGames(SubGame *subGame, Sprite sprites[NUM_SPRITES_GAME]);
 void freeSubGames(SubGame *subGame);
 
@@ -23,7 +22,8 @@ void initSubGame(SubGame *subGame) {
   subGame->gStored = 1500;
   subGame->bStored = 1500;
   
-  initEnemyGenerator(subGame);
+  subGame->enemyGenerator = malloc(sizeof(EnemyGenerator));
+  initEnemyGenerator(subGame->enemyGenerator);
   subGame->towers = NULL;
   subGame->enemies = NULL;
   subGame->bullets = NULL;
@@ -36,18 +36,16 @@ void initSubGame(SubGame *subGame) {
   printf("init subgame end\n");
 }
 
-int updateSubGames(SubGame *subGame, int levelTime, Sprite sprites[NUM_SPRITES_GAME]) {
+int updateSubGames(SubGame *subGame, Sprite sprites[NUM_SPRITES_GAME]) {
   printf("update subgame start\n");
   int score = 0;
-  if(levelTime) {
-    generateEnemies(subGame, levelTime, sprites);
-  }
+  generateEnemies(subGame, sprites);
   
   updateTowers(subGame);
   score += updateEnemies(subGame, sprites);
   updateBullets(subGame);
   if (subGame->next != NULL)
-    score += updateSubGames(subGame->next, levelTime, sprites);
+    score += updateSubGames(subGame->next, sprites);
   printf("update subgame end\n");
   return score;
 };

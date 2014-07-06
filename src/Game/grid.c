@@ -1,5 +1,7 @@
 #include "grid.h"
 
+extern void findPath(Grid *grid);
+
 void initGrid(Grid* grid, int x, int y){
   printf("init grid start\n"); 
   int i;
@@ -33,6 +35,7 @@ void initGrid(Grid* grid, int x, int y){
   grid->endTile->next = NULL;
   grid->endTile->x = grid->tiles[3][grid->dimensionY-1].x + 50;
   grid->endTile->y = grid->tiles[3][grid->dimensionY-1].y + 50;
+  findPath(grid);
   printf("init grid end\n");
 };
 

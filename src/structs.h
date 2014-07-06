@@ -46,7 +46,7 @@ typedef struct Enemy{
 
 typedef struct EnemyGenerator{
   double healthScale, RGBScale; //More health every wave, less RGB every wave
-  int wave, maxWave;
+  int wave, maxWave, levelTime;
   int info[NUM_ENEMIES][MAX_WAVES][NUM_INFO_PIECES];
 } EnemyGenerator;
 
@@ -62,12 +62,12 @@ typedef struct SubGame{
   Tower *towers; /*Linked list*/
   Bullet *bullets;
   Enemy *enemies;
-  EnemyGenerator enemyGenerator;
+  EnemyGenerator *enemyGenerator;
   struct SubGame *next;
 } SubGame;
 
 typedef struct Game {
-  int totalTime, levelTime, inGame, score, selectedTower;
+  int totalTime, inGame, score, selectedTower;
   int keys[NUM_GAME_KEYS];
   int towerPrices[NUM_TOWERS];
   SDL_Color rgbRatio;

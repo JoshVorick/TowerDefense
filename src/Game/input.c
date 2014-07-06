@@ -136,8 +136,8 @@ void getInputGame(Game *game){
           
           case SDLK_RETURN:
             game->keys[RETURN] = TRUE;
-            if(game->levelTime < 1 && game->subGames->enemies == NULL)
-              game->levelTime = 1;
+            if(game->subGames->enemyGenerator->levelTime < 1 && game->subGames->enemies == NULL)
+              game->subGames->enemyGenerator->levelTime = 1;
             break;
 
           default:

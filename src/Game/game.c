@@ -3,7 +3,7 @@
 extern SDL_Surface *loadImage(char *name);
 extern void initInputGame(Game *game);
 extern void initSubGame(SubGame *subGame);
-extern int updateSubGames(SubGame *subGame, int levelTime, Sprite sprites[NUM_SPRITES_GAME]);
+extern int updateSubGames(SubGame *subGame, Sprite sprites[NUM_SPRITES_GAME]);
 extern void drawString(char *text, int x, int y, TTF_Font *font, int centerX, int centerY, SDL_Color foregroundColor, SDL_Color backgroundColor);
 extern void drawImage(SDL_Surface *surface, int x, int y);
 extern void drawSubGames(SubGame *subGame, Sprite sprites[NUM_SPRITES_GAME]);
@@ -13,7 +13,6 @@ extern void freeSubGames(SubGame *subGame);
 void initGame(Game *game){
   printf("init game start\n");
   game->totalTime = 0;
-  game->levelTime = 0;
   game->inGame = TRUE;
   game->score = 0;
   game->selectedTower = TRIANGLE;
@@ -66,9 +65,7 @@ void initGame(Game *game){
 void updateGame(Game *game){
   printf("update game start\n");
   game->totalTime++;
-  if(game->levelTime)
-    game->levelTime++;
-  game->score += updateSubGames(game->subGames, game->levelTime, game->sprites);
+  game->score += updateSubGames(game->subGames, game->sprites);
   printf("update game end\n");
 };
 
